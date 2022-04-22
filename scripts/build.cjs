@@ -3,11 +3,16 @@ const esbuild = require("esbuild");
 const sass = require("sass");
 const htmlMinifier = require("html-minifier");
 
+if(!fs.existsSync("./docs")) {
+    fs.mkdirSync("./docs");
+}
+
 const isProduction = process.argv.includes("-prod");
 
 console.time("build");
 const script = fs.readFileSync("./src/script.js");
 const jsResult = esbuild.transformSync(script.toString(), { minify: isProduction, format: "iife" });
+fs.writeFileSync("./docs/script.js", jsResult.code);
 
 const style = fs.readFileSync("./src/style.scss");
 const cssResult = sass.compileString(style.toString());
@@ -16,7 +21,7 @@ const cssMinResult = esbuild.transformSync(cssResult.css, { minify: isProduction
 const html = fs.readFileSync("./src/index.html");
 const finalHTML = html.toString()
     .replace("%style%", "<style>" + cssMinResult.code + "</style>")
-    .replace("%script%", "<script>" + jsResult.code + "</script>");
+    .replace("%script%", `<script src="script.js"></script>`);
 const minHTML = !isProduction ? finalHTML : htmlMinifier.minify(finalHTML, {
     removeAttributeQuotes: true,
     collapseWhitespace: true,
@@ -26,7 +31,4 @@ const minHTML = !isProduction ? finalHTML : htmlMinifier.minify(finalHTML, {
 });
 console.timeEnd("build");
 
-if(!fs.existsSync("./docs")) {
-    fs.mkdirSync("./docs");
-}
 fs.writeFileSync("./docs/index.html", minHTML);

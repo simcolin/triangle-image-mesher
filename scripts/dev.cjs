@@ -2,9 +2,9 @@ const fs = require("fs");
 const childProcess = require("child_process");
 
 const files = [
-    "./index.html",
-    "./script.js",
-    "./style.scss",
+    "./src/index.html",
+    "./src/script.js",
+    "./src/style.scss",
 ];
 
 build();

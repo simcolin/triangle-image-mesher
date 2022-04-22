@@ -21,7 +21,7 @@ const cssMinResult = esbuild.transformSync(cssResult.css, { minify: isProduction
 const html = fs.readFileSync("./src/index.html");
 const finalHTML = html.toString()
     .replace("%style%", "<style>" + cssMinResult.code + "</style>")
-    .replace("%script%", `<script src="script.js"></script>`);
+    .replace("%script%", `<script async src="script.js"></script>`);
 const minHTML = !isProduction ? finalHTML : htmlMinifier.minify(finalHTML, {
     removeAttributeQuotes: true,
     collapseWhitespace: true,

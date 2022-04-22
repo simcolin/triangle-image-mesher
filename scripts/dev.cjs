@@ -13,7 +13,7 @@ for(const file of files) {
     let canBuild = true;
     fs.watch(file, () => {
         if(!canBuild) return;
-        console.log(file + " changed");
+        console.log(file.replace("./", "") + " changed");
         build();
         canBuild = false;
         setTimeout(() => canBuild = true, 100);
@@ -22,5 +22,5 @@ for(const file of files) {
 
 function build() {
     const stdout = childProcess.execSync("node scripts/build.cjs");
-    console.log(stdout.toString());
+    console.log(stdout.toString().replaceAll("\n", ""));
 }

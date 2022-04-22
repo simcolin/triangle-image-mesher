@@ -12,13 +12,17 @@ Link to the site : https://simcolin.github.io/triangle-image-mesher/
 
 ## How it works
 
-It prints the image onto the canvas, then generate a grid of points space evenly (spacing value) and offset them in a random direction (randomness value). We then get the color of the pixel under each point and draw a gradient triangle beetween points.
+It prints the image onto the canvas, then generate a grid of points space evenly (spacing value) and offset them in a random direction (randomness value). We then get the color of the pixel under each point and draw a gradient triangle beetween points, or draw a triangle with the color of a random pixel inside the triangle.
 
 ## Tech Stack
 
 - HTML
 - SCSS
 - Javascript (no library, with a little bit of JSDoc for editor typing)
+- Esbuild (js builder, js minifier and css minifier)
+- SASS (css builder)
+- HTML Minifier (as the name suggest)
+
 
 ## License
 

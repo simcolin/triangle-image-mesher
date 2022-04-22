@@ -1,0 +1,25 @@
+{
+  "name": "triangle-image-mesher",
+  "version": "1.0.0",
+  "description": "Link to the site : https://simcolin.github.io/triangle-image-mesher/",
+  "main": "index.js",
+  "scripts": {
+    "build": "node scripts/build.cjs -prod",
+    "dev": "node scripts/dev.cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simcolin/triangle-image-mesher.git"
+  },
+  "author": "Simon COLIN",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/simcolin/triangle-image-mesher/issues"
+  },
+  "homepage": "https://github.com/simcolin/triangle-image-mesher#readme",
+  "dependencies": {
+    "esbuild": "^0.14.37",
+    "html-minifier": "^4.0.0",
+    "sass": "^1.50.1"
+  }
+}

@@ -17,7 +17,7 @@ It prints the image onto the canvas, then generate a grid of points space evenly
 ## Tech Stack
 
 - HTML
-- CSS
+- SCSS
 - Javascript (no library, with a little bit of JSDoc for editor typing)
 
 ## License

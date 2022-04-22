@@ -21,6 +21,10 @@ for(const file of files) {
 }
 
 function build() {
-    const stdout = childProcess.execSync("node scripts/build.cjs");
-    console.log(stdout.toString().replaceAll("\n", ""));
+    try {
+        const stdout = childProcess.execSync("node scripts/build.cjs");
+        console.log(stdout.toString().replaceAll("\n", ""));
+    } catch(e) {
+        console.error(e);
+    }
 }

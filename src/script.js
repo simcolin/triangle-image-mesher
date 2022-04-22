@@ -1,4 +1,3 @@
-
 /** @type {HTMLInputElement} */
 const input = document.getElementById("image-input");
 /** @type {HTMLDivElement} */
@@ -23,13 +22,20 @@ const ctx = canvas.getContext("2d");
 let spacing = 20;
 let randomness = 10;
 let useGradient = false;
-/** @type {HTMLImageElement} */
-let image;
-/** @type {Blob} */
-let blob;
 
 let generationStartTime = 0;
 let generationEndTime = 0;
+
+/** @type {HTMLImageElement} */
+let image = null;
+/** @type {Blob} */
+let blob = null;
+/** @type {File} */
+let file = null;
+
+/** 
+ * @typedef {{ x: number, y: number }} Vector
+ */
 
 spacingInput.value = spacing;
 randomnessInput.value = randomness;
@@ -49,9 +55,7 @@ gradientCheckbox.onchange = () => {
     useGradient = gradientCheckbox.checked;
 }
 
-generateButton.onclick = () => {
-    drawImageToCanvas(image);
-};
+generateButton.onclick = () => drawImageToCanvas(image);
 downloadButton.onclick = downloadCanvas;
 
 dropzone.onclick = () => input.click();
@@ -64,9 +68,6 @@ dropzone.ondrop = (event) => {
     file = event.dataTransfer.items[0]?.getAsFile();
     tryReadFile();
 }
-
-/** @type {File} */
-let file;
 
 input.onchange = (e) => {
     file = e.target.files[0];
@@ -83,9 +84,6 @@ function downloadCanvas() {
     link.remove();
 }
 
-/**
- * @param {File} file 
- */
 function tryReadFile() {
     if (!file) return;
     dropzone.textContent = `${file.name} (${toReadableSize(file.size)})`;
@@ -119,7 +117,7 @@ function drawImageToCanvas(image) {
  * @param {number} width 
  * @param {number} height 
  */
-async function generateRandomPoints(width, height) {
+function generateRandomPoints(width, height) {
     const xCount = Math.ceil(width / spacing);
     const yCount = Math.ceil(height / spacing);
 
@@ -146,9 +144,9 @@ async function generateRandomPoints(width, height) {
 }
 
 /**
- * @param {{x:number, y:number}} a 
- * @param {{x:number, y:number}} b 
- * @param {{x:number, y:number}} c 
+ * @param {Vector} a 
+ * @param {Vector} b 
+ * @param {Vector} c 
  * @param {string} ac 
  * @param {string} bc 
  * @param {string} cc 
@@ -182,31 +180,29 @@ function drawTriangleGradient(a, b, c, ac, bc, cc) {
 }
 
 /**
- * @param {{x:number, y:number}} a 
- * @param {{x:number, y:number}} b 
- * @param {{x:number, y:number}} c 
+ * @param {Vector} a 
+ * @param {Vector} b 
+ * @param {Vector} c 
  */
 function drawTriangleWithRandomColor(a, b, c) {
     const colorPoints = getRandomPointInsideTriangle(a, b, c);
 
     const pixel = ctx.getImageData(colorPoints.x, colorPoints.y, 1, 1).data;
-    const color = `#${byteToHex(pixel[0])}${byteToHex(pixel[1])}${byteToHex(pixel[2])}`;
+    const color = "rgb(" + pixel[0] + "," + pixel[1] + "," + pixel[2] + ")";
 
+    ctx.fillStyle = color;
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.lineTo(b.x, b.y);
     ctx.lineTo(c.x, c.y);
-    ctx.closePath();
-
-    ctx.fillStyle = color;
     ctx.fill();
 }
 
 /**
- * @param {{x: number, y: number}} a 
- * @param {{x: number, y: number}} b 
- * @param {{x: number, y: number}} c 
- * @returns {{x: number, y: number}}
+ * @param {Vector} a 
+ * @param {Vector} b 
+ * @param {Vector} c 
+ * @returns {Vector}
  */
 function getRandomPointInsideTriangle(a, b, c) {
     const r1 = Math.random();
@@ -221,7 +217,7 @@ function getRandomPointInsideTriangle(a, b, c) {
 }
 
 /**
- * @param {{x: number, y: number}[][]} points 
+ * @param {Vector[][]} points 
  * @param {string[][]} colors 
  * @param {number} xCount 
  * @param {number} yCount 
@@ -234,12 +230,12 @@ function drawTriangles(points, colors, xCount, yCount) {
             const c = points[x][y + 1];
             const d = points[x + 1][y + 1];
 
-            const ac = colors[x][y];
-            const bc = colors[x + 1][y];
-            const cc = colors[x][y + 1];
-            const dc = colors[x + 1][y + 1];
-
             if(useGradient) {
+                const ac = colors[x][y];
+                const bc = colors[x + 1][y];
+                const cc = colors[x][y + 1];
+                const dc = colors[x + 1][y + 1];
+
                 if (Math.random() > 0.5) {
                     drawTriangleGradient(a, b, c, ac, bc, cc);
                     drawTriangleGradient(b, c, d, bc, cc, dc);

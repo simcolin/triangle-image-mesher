@@ -26,7 +26,7 @@ const minHTML = !isProduction ? finalHTML : htmlMinifier.minify(finalHTML, {
 });
 console.timeEnd("build");
 
-if(!fs.existsSync("./dist")) {
-    fs.mkdirSync("./dist");
+if(!fs.existsSync("./docs")) {
+    fs.mkdirSync("./docs");
 }
-fs.writeFileSync("./dist/index.html", minHTML);
+fs.writeFileSync("./docs/index.html", minHTML);
